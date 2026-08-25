@@ -27,8 +27,8 @@ jobs:
         run: node engine/tick.mjs
       - name: commit world state
         run: |
-          git config user.name "terra-mirror"
-          git config user.email "terra-mirror[bot]@users.noreply.github.com"
+          git config user.name "aiden128"
+          git config user.email "klein128@gmail.com"
           git add state/world.json state/pending.json
           git diff --cached --quiet || git commit -m "tick $(date -u '+%Y-%m-%dT%H:%M:%SZ')"
           git push
