@@ -71,12 +71,14 @@ export class Renderer {
 
     const now = Date.now();
 
-    ctx.beginPath();
-    for (let x = 0; x < 96; x++) {
+    const veil = ctx.createLinearGradient(0, 0, this.cssW, 0);
+    for (let s = 0; s <= 24; s++) {
+      const x = Math.round((s / 24) * 95);
       const l = daylight(x, new Date(now));
-      ctx.fillStyle = `rgba(4,8,18,${(1 - l) * 0.62})`;
-      ctx.fillRect(x * cell, 0, cell + 0.6, this.cssH);
+      veil.addColorStop(s / 24, `rgba(4,8,18,${(1 - l) * 0.62})`);
     }
+    ctx.fillStyle = veil;
+    ctx.fillRect(0, 0, this.cssW, this.cssH);
 
     const kp = this.state.real?.kp;
     if (kp != null && kp >= 5) {
