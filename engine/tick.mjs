@@ -7,7 +7,7 @@ import { fetchQuakes, fetchKp } from './climate.mjs';
 import { listInterventions, eraseIntervention } from './dnsq.mjs';
 
 const TICK_MS = 60000;
-const MAX_CATCHUP = 30;
+const MAX_CATCHUP = 60;
 
 async function main() {
   const st = loadWorld();

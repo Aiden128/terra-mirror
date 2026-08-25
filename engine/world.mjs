@@ -313,6 +313,10 @@ export function advanceWorld(st, ticks, now = Date.now()) {
       });
       if (st.hist.length > HIST_CAP) st.hist.shift();
     }
+
+    // --- almanac: the chronicle of ordinary days ---
+    if (st.tick % 180 === 0) writeAlmanac(st, now);
+    writeMilestones(st);
   }
 
   // --- extinction watch / panspermia ---
@@ -363,6 +367,72 @@ function maybeStormChron(st, kp) {
     chron(st, `地磁風暴侵襲（Kp ${kp.toFixed(1)}）。輻射穿過大氣，突變率上升，夜空中泛起極光。`, '🌌');
   }
   st.real._prevKp = kp;
+}
+
+// ---------- almanac & milestones: a chronicle must also record ordinary life ----------
+function writeAlmanac(st, now) {
+  const h = st.creatures.filter((c) => c.sp === 'H').length;
+  const p = st.creatures.filter((c) => c.sp === 'P').length;
+  const pl = st.plants.length;
+  const seas = season(new Date(now));
+  const seasonTxt =
+    seas > 0.5 ? '盛夏' : seas > 0 ? '夏季' : seas > -0.5 ? '冬季' : '隆冬';
+  const dayFrac = ((st.tick % 1440) / 1440) * 24;
+  const hourTxt = `${String(Math.floor(dayFrac)).padStart(2, '0')}:${String(Math.floor((dayFrac % 1) * 60)).padStart(2, '0')}`;
+  const T = [
+    `歲時記 —— ${seasonTxt}。鏡地現有噬草獸 ${h} 隻、獵影獸 ${p} 隻，植物 ${pl} 株。世界時間 ${hourTxt}。`,
+    `太平日子。草食者 ${h} 與獵食者 ${p} 之間維持著脆弱的平衡，植物 ${pl} 株在陽光下生長。`,
+    `編年史官巡視鏡地：萬物照常。最老的生物已活了 ${Math.floor((st.meta.oldestAge ?? 0) / 60)} 個世界時。`,
+    `${seasonTxt}的風吹過鏡地。今日無災無難 —— 而無事，正是生態最奢侈的狀態。`,
+  ];
+  chron(st, T[Math.floor(st.tick / 180) % T.length], '📖');
+}
+
+function writeMilestones(st) {
+  const m = st.meta;
+  m.flags = m.flags || {};
+  const h = st.creatures.filter((c) => c.sp === 'H').length;
+  const p = st.creatures.filter((c) => c.sp === 'P').length;
+
+  // oldest living ever (chronicle when record beaten by >= 2h world time)
+  for (const c of st.creatures) {
+    if (c.age > (m.oldestAge ?? 0)) {
+      const prev = m.oldestAge ?? 0;
+      m.oldestAge = c.age;
+      if (c.age - prev >= 120 && c.age >= 240) {
+        chron(st, `${c.name ? `「${c.name}」` : `${c.sp === 'H' ? '噬草獸' : '獵影獸'} #${c.id}`}成為鏡地史上最長壽的生命 —— ${Math.floor(c.age / 60)} 個世界時，仍在行走。`, '🕰️');
+      }
+    }
+  }
+
+  // population highs (chronicle on new record, margin >= 15)
+  if (h >= (m.maxPopH ?? 0) + 15 && h >= 30) {
+    m.maxPopH = h;
+    chron(st, `噬草獸數量突破 ${h} 隻 —— 鏡地史上最繁盛的世代。`, '🌾');
+  } else if (h > (m.maxPopH ?? 0)) {
+    m.maxPopH = h;
+  }
+  if (p >= (m.maxPopP ?? 0) + 8 && p >= 12) {
+    m.maxPopP = p;
+    chron(st, `獵影獸增至 ${p} 隻 —— 陰影從未如此稠密。`, '🌑');
+  } else if (p > (m.maxPopP ?? 0)) {
+    m.maxPopP = p;
+  }
+
+  // bloom / famine with hysteresis
+  const pl = st.plants.length;
+  if (pl >= 850 && !m.flags.bloom) {
+    m.flags.bloom = true;
+    chron(st, `大豐年。植物覆滿沃土（${pl} 株），草食者的黃金時代。`, '🌸');
+  } else if (pl < 600) {
+    m.flags.bloom = false;
+  }
+  if (pl <= 60 && !m.flags.famine) {
+    m.flags.famine = true;
+    chron(st, `饑荒之兆。植物僅餘 ${pl} 株，飢餓在鏡地蔓延。`, '🥀');
+  } else if (pl > 200) {
+    m.flags.famine = false;
+  }
 }
 
 // ---------- real earthquakes → mirror disasters ----------
