@@ -1,0 +1,11 @@
+{
+  "name": "terra-mirror",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "tick": "node engine/tick.mjs"
+  }
+}

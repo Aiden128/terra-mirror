@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>鏡地 Terra Mirror — 與真實地球同步呼吸的生態圈</title>
+<meta name="description" content="一個持續演化的人工生命世界：晝夜跟隨真實太陽，地震撼動大地，磁暴加速突變。它在你離開時依然活著。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌍</text></svg>">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div id="app">
+  <header id="topbar">
+    <div class="brand">
+      <h1>鏡地 <span class="latin">TERRA MIRROR</span></h1>
+      <p class="tagline">一個與真實地球同步呼吸的生態圈</p>
+    </div>
+    <div id="earth-coupling" class="coupling">
+      <div class="chip" id="chip-clock" title="世界時間 = 你的真實 UTC 時間">⏳ <span>—</span></div>
+      <div class="chip" id="chip-kp" title="NOAA 行星 Kp 指數 — 驅動突變率與極光">🧲 Kp <span>—</span></div>
+      <div class="chip" id="chip-quake" title="USGS 近 12 小時地震 — 在世界中引發災難">🌍 地震 <span>—</span></div>
+      <div class="chip" id="chip-epoch" title="紀元">📜 第 <span>—</span> 紀元</div>
+      <div class="chip" id="chip-tick" title="世界心跳數（每分鐘 +1）">💓 <span>—</span></div>
+    </div>
+  </header>
+
+  <main id="stage">
+    <div id="world-wrap">
+      <canvas id="world"></canvas>
+      <div id="tooltip" hidden></div>
+    </div>
+
+    <aside id="side">
+      <section class="panel" id="panel-divine">
+        <h2>神力 <small id="divine-pool">—</small></h2>
+        <div class="powers">
+          <button data-power="seed_plant" data-cost="5">🌱 播種 <em>5</em></button>
+          <button data-power="rain" data-cost="15">🌧️ 降雨 <em>15</em></button>
+          <button data-power="meteor" data-cost="40">☄️ 隕石 <em>40</em></button>
+        </div>
+        <p class="hint">選擇神力後點擊世界。神力隨真實時間緩慢回復。</p>
+      </section>
+
+      <section class="panel" id="panel-inspector" hidden>
+        <h2>生命標本 <button id="inspector-close" class="ghost">×</button></h2>
+        <div id="inspector-body"></div>
+      </section>
+
+      <section class="panel grow" id="panel-chronicle">
+        <h2>編年史</h2>
+        <ol id="chronicle-list"></ol>
+      </section>
+
+      <section class="panel" id="panel-events">
+        <h2>此刻</h2>
+        <ul id="event-list"></ul>
+      </section>
+    </aside>
+  </main>
+
+  <footer id="statusbar">
+    <span id="stat-pop">—</span>
+    <span id="stat-plants">—</span>
+    <span id="stat-daynight">—</span>
+    <span class="spacer"></span>
+    <a href="https://github.com/Aiden128/terra-mirror" target="_blank" rel="noopener">心臟在 GitHub 上跳動 ↗</a>
+  </footer>
+</div>
+<script type="module" src="/js/main.js"></script>
+</body>
+</html>
